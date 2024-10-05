@@ -21,28 +21,44 @@ data = pd.read_csv(data_path)
 # Заголовок вашого застосунку
 st.title("Прогноз дощу в Австралії")
 
-# Вибір значень для прогнозу
-date = st.date_input("Виберіть дату")
-location = st.selectbox("Виберіть локацію", data['Location'].unique())
-min_temp = st.slider("Мінімальна температура (°C)", float(data['MinTemp'].min()), float(data['MinTemp'].max()), float(data['MinTemp'].mean()))
-max_temp = st.slider("Максимальна температура (°C)", float(data['MaxTemp'].min()), float(data['MaxTemp'].max()), float(data['MaxTemp'].mean()))
+# Створити колонки для вибору даних
+col1, col2 = st.columns(2)
+
+# Групування вибору даних у колонки
+with col1:
+    date = st.date_input("Виберіть дату")
+    min_temp = st.slider("Мінімальна температура (°C)", float(data['MinTemp'].min()), float(data['MinTemp'].max()), float(data['MinTemp'].mean()))
+
+with col2:
+    location = st.selectbox("Виберіть локацію", data['Location'].unique())
+    max_temp = st.slider("Максимальна температура (°C)", float(data['MaxTemp'].min()), float(data['MaxTemp'].max()), float(data['MaxTemp'].mean()))
+
+# Решта компонентів залишаємо як є
 rainfall = st.slider("Кількість опадів (мм)", float(data['Rainfall'].min()), float(data['Rainfall'].max()), float(data['Rainfall'].mean()))
 evaporation = st.slider("Випаровування (мм)", float(data['Evaporation'].min()), float(data['Evaporation'].max()), float(data['Evaporation'].mean()))
 sunshine = st.slider("Кількість сонячних годин", float(data['Sunshine'].min()), float(data['Sunshine'].max()), float(data['Sunshine'].mean()))
 wind_gust_dir = st.selectbox("Напрямок сильного вітру", data['WindGustDir'].dropna().unique())
 wind_gust_speed = st.slider("Швидкість сильного вітру (км/год)", float(data['WindGustSpeed'].min()), float(data['WindGustSpeed'].max()), float(data['WindGustSpeed'].mean()))
-wind_dir_9am = st.selectbox("Напрямок вітру о 9:00", data['WindDir9am'].dropna().unique())
-wind_dir_3pm = st.selectbox("Напрямок вітру о 15:00", data['WindDir3pm'].dropna().unique())
-wind_speed_9am = st.slider("Швидкість вітру о 9:00 (км/год)", float(data['WindSpeed9am'].min()), float(data['WindSpeed9am'].max()), float(data['WindSpeed9am'].mean()))
-wind_speed_3pm = st.slider("Швидкість вітру о 15:00 (км/год)", float(data['WindSpeed3pm'].min()), float(data['WindSpeed3pm'].max()), float(data['WindSpeed3pm'].mean()))
-humidity_9am = st.slider("Вологість о 9:00 (%)", float(data['Humidity9am'].min()), float(data['Humidity9am'].max()), float(data['Humidity9am'].mean()))
-humidity_3pm = st.slider("Вологість о 15:00 (%)", float(data['Humidity3pm'].min()), float(data['Humidity3pm'].max()), float(data['Humidity3pm'].mean()))
-pressure_9am = st.slider("Тиск о 9:00 (hPa)", float(data['Pressure9am'].min()), float(data['Pressure9am'].max()), float(data['Pressure9am'].mean()))
-pressure_3pm = st.slider("Тиск о 15:00 (hPa)", float(data['Pressure3pm'].min()), float(data['Pressure3pm'].max()), float(data['Pressure3pm'].mean()))
-cloud_9am = st.slider("Хмарність о 9:00 (октави)", float(data['Cloud9am'].min()), float(data['Cloud9am'].max()), float(data['Cloud9am'].mean()))
-cloud_3pm = st.slider("Хмарність о 15:00 (октави)", float(data['Cloud3pm'].min()), float(data['Cloud3pm'].max()), float(data['Cloud3pm'].mean()))
-temp_9am = st.slider("Температура о 9:00 (°C)", float(data['Temp9am'].min()), float(data['Temp9am'].max()), float(data['Temp9am'].mean()))
-temp_3pm = st.slider("Температура о 15:00 (°C)", float(data['Temp3pm'].min()), float(data['Temp3pm'].max()), float(data['Temp3pm'].mean()))
+
+# Створити колонки для вітру, вологості, тиску, хмарності та температури о 9 та 15 
+col3, col4 = st.columns(2)
+
+with col3:
+    wind_dir_9am = st.selectbox("Напрямок вітру о 9:00", data['WindDir9am'].dropna().unique())
+    wind_speed_9am = st.slider("Швидкість вітру о 9:00 (км/год)", float(data['WindSpeed9am'].min()), float(data['WindSpeed9am'].max()), float(data['WindSpeed9am'].mean()))
+    humidity_9am = st.slider("Вологість о 9:00 (%)", float(data['Humidity9am'].min()), float(data['Humidity9am'].max()), float(data['Humidity9am'].mean()))
+    pressure_9am = st.slider("Тиск о 9:00 (hPa)", float(data['Pressure9am'].min()), float(data['Pressure9am'].max()), float(data['Pressure9am'].mean()))
+    cloud_9am = st.slider("Хмарність о 9:00 (октави)", min_value=0, max_value=10, value=5, step=1)
+    temp_9am = st.slider("Температура о 9:00 (°C)", float(data['Temp9am'].min()), float(data['Temp9am'].max()), float(data['Temp9am'].mean()))
+
+with col4:
+    wind_dir_3pm = st.selectbox("Напрямок вітру о 15:00", data['WindDir3pm'].dropna().unique())
+    wind_speed_3pm = st.slider("Швидкість вітру о 15:00 (км/год)", float(data['WindSpeed3pm'].min()), float(data['WindSpeed3pm'].max()), float(data['WindSpeed3pm'].mean()))
+    humidity_3pm = st.slider("Вологість о 15:00 (%)", float(data['Humidity3pm'].min()), float(data['Humidity3pm'].max()), float(data['Humidity3pm'].mean()))
+    pressure_3pm = st.slider("Тиск о 15:00 (hPa)", float(data['Pressure3pm'].min()), float(data['Pressure3pm'].max()), float(data['Pressure3pm'].mean()))
+    cloud_3pm = st.slider("Хмарність о 15:00 (октави)", min_value=0, max_value=10, value=5, step=1)
+    temp_3pm = st.slider("Температура о 15:00 (°C)", float(data['Temp3pm'].min()), float(data['Temp3pm'].max()), float(data['Temp3pm'].mean()))
+
 rain_today = st.selectbox("Чи був дощ сьогодні?", ["Yes", "No"])
 
 # Створення DataFrame для передбачення
