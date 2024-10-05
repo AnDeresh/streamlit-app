@@ -18,8 +18,26 @@ categorical_cols = loaded_model['categorical_cols']
 data_path = "data/weatherAUS.csv"
 data = pd.read_csv(data_path)
 
-# Заголовок вашого застосунку
-st.title("Прогноз дощу в Австралії")
+# Додати зображення
+st.image("images/logo_for_an_application.png")
+
+# Додати кастомний CSS для стилю заголовка
+st.markdown(
+    """
+    <style>
+    .custom-title {
+        font-size: 28px;  /* Зменшений розмір шрифту */
+        color: #dcdee3;   /* Світло-сірий колір тексту */
+        font-weight: bold;
+        text-align: center; /* Центрування тексту */
+        margin-top: -20px; /* Зменшення верхнього відступу заголовка */
+    }
+    """,
+    unsafe_allow_html=True
+)
+
+# Додати заголовок із кастомним стилем
+st.markdown('<h1 class="custom-title">Прогноз дощу в Австралії</h1>', unsafe_allow_html=True)
 
 # Створити колонки для вибору даних
 col1, col2 = st.columns(2)
